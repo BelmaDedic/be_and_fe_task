@@ -14,7 +14,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://belma:svadba1712@cluster0.kn4cg.mongodb.net/be_and_fe_task', {
+mongoose.connect('mongodb+srv://admin:admin@cluster0.kn4cg.mongodb.net/be_and_fe_task', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 } as ConnectOptions);
