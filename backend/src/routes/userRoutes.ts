@@ -4,23 +4,21 @@ import mongoose from "mongoose";
 
 const router = express();
 
-router.get("/:email?/:phoneNumber?", async (req, res) => {
-    const email = req.params.email;
-    const phoneNumberValue = req.params.phoneNumber;
+router.get("/", async (req, res) => {
+    const {email, phoneNumber} = req.query;
     let users = null;
 
-
-    if(email === undefined && phoneNumberValue === undefined) {
+    if(email === undefined && phoneNumber === undefined) {
         users = await userSchema.find();
         res.json(users);
-    } else if (email !== undefined || phoneNumberValue === undefined) {
+    } else if (email !== undefined && phoneNumber === undefined) {
         users = await userSchema.find({email: email});
         res.json(users);
-    } else if (email === undefined || phoneNumberValue !== undefined) {
-        users = await userSchema.find({value: phoneNumberValue});
+    } else if (email === undefined && phoneNumber !== undefined) {
+        users = await userSchema.find({phoneNumber : {$elemMatch:{value: phoneNumber}}} );
         res.json(users);
     } else {
-        users = await userSchema.find( {email:email} && {value: phoneNumberValue});
+        users = await userSchema.find( {email:email} && {phoneNumber : {$elemMatch:{value: phoneNumber}}});
         res.json(users);
     }
 });
@@ -47,6 +45,7 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
+    console.log(req.body.value);
     const updateUser = await userSchema.findByIdAndUpdate(
         {_id: req.params.id}, 
         {
@@ -54,12 +53,17 @@ router.put("/:id", async (req, res) => {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 email: req.body.email,
-                phoneNumber: {value: req.body.value}
+                phoneNumber: req.body.value &&  [
+                    { numberType: "primary", 
+                    value: req.body.value }
+                ]
             },
         }
     );
-    updateUser?.save().then(() => {
-        res.json(updateUser);
+    updateUser?.save().then(async () => {
+        const _id = req.params.id;
+        const updatedUser = await userSchema.findById(_id);
+        res.json(updatedUser);
     });
 });
     

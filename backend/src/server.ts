@@ -14,7 +14,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://admin:admin@cluster0.kn4cg.mongodb.net/be_and_fe_task', {
+const mongoDBlink = process.env.mongoDBlink || "";
+mongoose.connect(mongoDBlink, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 } as ConnectOptions);
