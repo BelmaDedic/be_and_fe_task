@@ -5,5 +5,10 @@ export interface IUser extends Document {
     firstName: string;
     lastName: string;
     email: string;
-    phoneNumber: {numberType: string, value: string};
+    phoneNumber: IPhoneNumber;
+}
+
+export interface IPhoneNumber {
+    numberType: string;
+     value: string
 }
