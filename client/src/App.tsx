@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Users from './components/users/Users';
 import UserDetails from './components/users/UserDetails';
 import { UserObject } from './components/users/UserObject';
+import UpdateUser from './components/users/UpdateUser';
 
 function App() {
   const [userDetails, setUserDetails] = useState<UserObject>();
@@ -18,6 +19,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Users handleUserDetails={handleUserDetails}/> } />
                 <Route path="/UserDetails" element={<UserDetails  userDetails={userDetails}/> } />
+                <Route path='/updateUser/:id' element={< UpdateUser />} />
               </Routes>
             </div>
           </Router>

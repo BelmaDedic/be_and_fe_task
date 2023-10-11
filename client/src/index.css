@@ -46,3 +46,28 @@
 .userImage {
   width: 40%;
 }
+
+.updateUser {
+  height: 100vh;
+}
+
+.updateUser .avatar {
+  margin: auto;
+  margin-top: 1%;
+}
+
+.updateUser form {
+  width: 35%;
+  margin: auto;
+}
+
+.updateUser form .label {
+  text-align: left;
+  margin-bottom: 1%;
+  margin-top: 3%;
+}
+
+.updateUser form .submit {
+  margin-top: 5%;
+  margin-bottom: 4%; 
+}

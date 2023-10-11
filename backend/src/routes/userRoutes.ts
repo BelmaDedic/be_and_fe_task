@@ -45,7 +45,6 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
-    console.log(req.body.value);
     const updateUser = await userSchema.findByIdAndUpdate(
         {_id: req.params.id}, 
         {
