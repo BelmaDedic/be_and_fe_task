@@ -6,25 +6,26 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import DeleteUserDialog from './DeleteUserDialog';
 
 interface CardProps {
     user: UserObject;
     handleUserDetails: (user: UserObject) => void
+    handleSetUsers: Dispatch<SetStateAction<UserObject[]>>;
 }
 
-const UserCards = ( {user, handleUserDetails} : CardProps ) => {
+const UserCards = ( {user, handleUserDetails, handleSetUsers} : CardProps ) => {
 
-    const [isDialogOpen, setDialogOpen] = useState(false);
-    const [userId, setUserId] = useState(''); // Store the user ID to be deleted
+    const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
+    const [userId, setUserId] = useState<string>(''); // Store the user ID to be deleted
 
     const navigate = useNavigate();
     const phoneNumber: IPhoneNumber = Object.values(user.phoneNumber).pop();
 
     const getDetails = (user: UserObject) => {
         handleUserDetails(user);
-        navigate("/UserDetails");
+        navigate(`/UserDetails/${user._id}`);
     }
 
     const updateUser = (id: string) => {
@@ -57,7 +58,7 @@ const UserCards = ( {user, handleUserDetails} : CardProps ) => {
                     <p className="updateButton" onClick={() => updateUser(user._id)}> {" "}
                         <EditIcon />
                     </p>
-                    <DeleteUserDialog open={isDialogOpen} onClose={() => setDialogOpen(false)} userId={userId} />
+                    <DeleteUserDialog open={isDialogOpen} onClose={() => setDialogOpen(false)} userId={userId} handleSetUsers={handleSetUsers}/>
                 </div>
             </Card.Body>
         </Card>

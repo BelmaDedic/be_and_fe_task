@@ -4,6 +4,10 @@ import mongoose from "mongoose";
 
 const router = express();
 
+function escapeRegex(text: string) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
+
 router.get("/", async (req, res) => {
     const {email, phoneNumber} = req.query;
     let users = null;
@@ -13,17 +17,20 @@ router.get("/", async (req, res) => {
     if(phoneNumber === "default") {
         phoneNumber === undefined;
     }
-    if(email === undefined && phoneNumber === undefined) {
+    const regexEmail = req.query.email && new RegExp(escapeRegex(req.query.email as string), 'gi');
+    const regexPhoneNumber =req.query.phoneNumber && new RegExp(escapeRegex(req.query.phoneNumber as string), 'gi');
+
+    if((email === undefined || email === "default") && (phoneNumber === undefined || phoneNumber === "default")) {
         users = await userSchema.find();
         res.json(users);
-    } else if (email !== undefined && phoneNumber === undefined) {
-        users = await userSchema.find({email: email});
+    } else if (email !== undefined && (phoneNumber === undefined || phoneNumber === "default")) {
+        users = await userSchema.find({email: regexEmail});
         res.json(users);
-    } else if (email === undefined && phoneNumber !== undefined) {
-        users = await userSchema.find({phoneNumber : {$elemMatch:{value: phoneNumber}}} );
+    } else if ((email === undefined || email === "default") && phoneNumber !== undefined) {
+        users = await userSchema.find({phoneNumber : {$elemMatch:{value: regexPhoneNumber}}} );
         res.json(users);
     } else {
-        users = await userSchema.find( {email:email} && {phoneNumber : {$elemMatch:{value: phoneNumber}}});
+        users = await userSchema.find( {$and: [ {email:regexEmail}, {phoneNumber : {$elemMatch:{value: regexPhoneNumber}}}]} );
         res.json(users);
     }
 });

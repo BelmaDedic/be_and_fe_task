@@ -1,6 +1,6 @@
 import { Avatar, Box, Button, InputLabel,TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { pink } from "@mui/material/colors";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -14,7 +14,6 @@ const AddUser = () => {
     const[lastNameError, setLastNameError] = useState(false);
     const[emailError, setEmailError] = useState(false);
     const[phoneNumberError, setPhoneNumberError] = useState(false);
-    const {id} = useParams();
     const navigate = useNavigate();
 
     const restriction = /^[0-9]?\d*(?:[-]\d*)?(?:[0-9]\d*)?(?:[-]\d*)?(?:[0-9]\d*)?$/;
@@ -53,9 +52,34 @@ const AddUser = () => {
         })
     }
 
+    const primaryPhoneNumberFormatting = (input: string): string => {
+        // Remove any non-numeric characters from the input
+      const phoneNumber = input.replace(/\D/g, '');
+      
+      // Check if the input is empty or exceeds 10 digits
+      if (phoneNumber.length === 0) {
+        input = '';
+      } else if (phoneNumber.length <= 10) {
+        // Format the phone number as XXX-XXX-XXXX
+        let formattedNumber = phoneNumber.slice(0, 3);
+        if (phoneNumber.length > 3) {
+          formattedNumber += '-' + phoneNumber.slice(3, 6);
+        }
+        if (phoneNumber.length > 6) {
+          formattedNumber += '-' + phoneNumber.slice(6, 10);
+        }
+        input = formattedNumber;
+      } else {
+        // If the input exceeds 10 digits, truncate it
+        input = phoneNumber.slice(0, 10);
+      }
+
+      return input;
+    }
+
     const checkAndSetPhoneNumber = (e: string) => {
         if (restriction.test(e)) {
-            setPhoneNumberValue(e);
+            setPhoneNumberValue(primaryPhoneNumberFormatting(e));
         }
     }
 

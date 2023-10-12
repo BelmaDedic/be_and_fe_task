@@ -19,7 +19,6 @@ const Users = ({handleUserDetails} : UserProps) => {
     const[users, setUsers] = useState<UserObject[]>([]);
     const[email, setEmail] = useState('default');
     const[phoneNumber, setPhoneNumber] = useState('default');
-    const[user, setUser] = useState<UserObject>();
     const [currentPage, setCurrentPage] = useState(1);
 
     const itemsPerPage = 4;
@@ -37,14 +36,14 @@ const Users = ({handleUserDetails} : UserProps) => {
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-          fetchedUsers();
+            handleSearch();
         }, 1000)
         return () => clearTimeout(delayDebounceFn);
     }, [email]);
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-          fetchedUsers();
+            handleSearch();
         }, 1000)
         return () => clearTimeout(delayDebounceFn);
     }, [phoneNumber]);
@@ -58,17 +57,22 @@ const Users = ({handleUserDetails} : UserProps) => {
     const fetchedUsers = async () => {
         if (email === "default" && phoneNumber === "default") {
           const data = await fetch("http://localhost:5000/users");
-          const user: UserObject = await data.json();
-          setUser(user);
-        } else if (email !== "default" || phoneNumber !== "default"){
-            console.log(email + " " + phoneNumber)
-          const data = await fetch("http://localhost:5000/users?email=" + email + "&phoneNumber=" + phoneNumber);
-          const user: UserObject = await data.json();
-          if(user) {
-            setUser(user);
-          }
+          const users: UserObject[] = await data.json();
+          setUsers(users);
         }
     };
+
+    const handleSearch = async () =>  {
+        if(email !== 'default' || phoneNumber !== 'default'){
+            console.log(email);
+            const data = await fetch("http://localhost:5000/users?email=" + email + "&phoneNumber=" + phoneNumber);
+            const users: UserObject[] = await data.json();
+            console.log(users);
+            setUsers(users);
+        } else if (email === 'default' || phoneNumber === 'default'){
+            fetchUsers();
+        }
+    }
 
     const addUser = () => {
         navigate('/AddUser');
@@ -94,7 +98,7 @@ const Users = ({handleUserDetails} : UserProps) => {
             </div>
 
             <div className="homePagination">
-                { users && <PaginatedList users = {currentData} handleUserDetails = {handleUserDetails}/>}    
+                { users && <PaginatedList users = {currentData} handleUserDetails = {handleUserDetails} setUsers={setUsers}/>}    
                 <div className="pagination">
                     <Button variant="outlined" color="secondary" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1} startIcon={ <ArrowBackIosRoundedIcon/> }>Previous</Button>
                     <div className="page"> {currentPage} </div>               

@@ -3,19 +3,36 @@ import userImage from '../../images/user.png'
 import Typography from "@mui/material/Typography";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import Button from "@mui/material/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 interface DetailsProps {
     userDetails: UserObject | undefined;
 }
 
 const UserDetails = ({userDetails}: DetailsProps) => {
+    const[user, setUser] = useState<UserObject | undefined>(userDetails);
 
-    const phoneNumber: IPhoneNumber = userDetails && Object.values(userDetails.phoneNumber).pop();
+    const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(userDetails === undefined) {
+            fetchUser();
+        }
+    }, []);
+
+    const phoneNumber: IPhoneNumber = user && Object.values(user.phoneNumber).pop();
 
     const goBack = () => {
         navigate('/');
+    }
+
+    // If userDetails not exist, then fetch by id and store it in userDetails
+    const fetchUser = async () => {
+        const fetchedUser = await fetch("http://localhost:5000/users/" + id);
+        const user: UserObject = await fetchedUser.json();
+        setUser(user);
     }
 
     return ( 
@@ -28,14 +45,14 @@ const UserDetails = ({userDetails}: DetailsProps) => {
                 <img className="userImage" src={userImage} alt="user"/>
                 <br/>
                 <Typography variant="h4" gutterBottom>
-                {userDetails?.firstName} {userDetails?.lastName}</Typography>
+                {user?.firstName} {user?.lastName}</Typography>
                 <br/>
                 <Typography variant="subtitle1" gutterBottom>
-                Email: {userDetails?.email}
+                Email: {user?.email}
                 <br/>
-                Phone number: {phoneNumber.value}
+                Phone number: {phoneNumber?.value}
                 <br/>
-                Type of number: {phoneNumber.numberType}
+                Type of number: {phoneNumber?.numberType}
                 </Typography>
             </div>
         </div>

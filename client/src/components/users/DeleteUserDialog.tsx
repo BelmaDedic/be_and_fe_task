@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -11,20 +11,15 @@ interface DeleteUserDialogProps {
   open: boolean;
   onClose: () => void;
   userId: string; // Forwarded user ID
+  handleSetUsers: Dispatch<SetStateAction<UserObject[]>>;
 }
 
-const DeleteUserDialog: React.FC<DeleteUserDialogProps> = ({ open, onClose, userId }) => {
-
-  const[users, setUsers] = useState<UserObject>();
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+const DeleteUserDialog: React.FC<DeleteUserDialogProps> = ({ open, onClose, userId, handleSetUsers }) => {
 
   const fetchUsers = async () => {
     const fetchedUser = await fetch("http://localhost:5000/users");
     const user = await fetchedUser.json();
-    setUsers(user);
+    handleSetUsers(user);
   };
     
   const handleDelete = (userId: string) => {
