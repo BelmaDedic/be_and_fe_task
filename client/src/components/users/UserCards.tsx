@@ -6,7 +6,7 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import DeleteUserDialog from './DeleteUserDialog';
 
 interface CardProps {
@@ -51,10 +51,10 @@ const UserCards = ( {user, handleUserDetails} : CardProps ) => {
             </ListGroup>
             <Card.Body>
                 <div className="deleteAndUpdate">
-                    <p className="delete" onClick={() => handleDeleteUser(user._id)}>
+                    <p className="deleteButton" onClick={() => handleDeleteUser(user._id)}>
                         <DeleteIcon />
                     </p>
-                    <p className="update" onClick={() => updateUser(user._id)}> {" "}
+                    <p className="updateButton" onClick={() => updateUser(user._id)}> {" "}
                         <EditIcon />
                     </p>
                     <DeleteUserDialog open={isDialogOpen} onClose={() => setDialogOpen(false)} userId={userId} />

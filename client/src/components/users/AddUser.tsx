@@ -1,14 +1,11 @@
-import { Avatar, Box, Button, InputLabel, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Avatar, Box, Button, InputLabel,TextField, Typography } from "@mui/material";
+import { useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom'
-import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import { pink } from "@mui/material/colors";
-import { IPhoneNumber, UserObject } from "./UserObject";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
-const UpdateUser = () => {
-
-    const[user, setUser] = useState<UserObject>();
+const AddUser = () => {  
     const[name, setName] = useState('');
     const[lastName, setLastName] = useState('');
     const[email, setEmail] = useState('');
@@ -21,23 +18,8 @@ const UpdateUser = () => {
     const navigate = useNavigate();
 
     const restriction = /^[0-9]?\d*(?:[-]\d*)?(?:[0-9]\d*)?(?:[-]\d*)?(?:[0-9]\d*)?$/;
-    
-    useEffect(() => {
-        fetchUser();
-    }, []);
 
-    const fetchUser = async() => {
-        const fetchUser = await fetch('http://localhost:5000/users/' + id);
-        const fetchedUser: UserObject = await fetchUser.json();
-        setUser(fetchedUser);
-        const phoneNumber: IPhoneNumber = Object.values(fetchedUser.phoneNumber).pop();
-        setName(fetchedUser.firstName);
-        setLastName(fetchedUser.lastName);
-        setEmail(fetchedUser.email);
-        setPhoneNumberValue(phoneNumber.value);
-    }
-
-    const updateUser = (e: React.FormEvent<HTMLFormElement>) => {
+    const addUser = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setNameError(false);
@@ -45,9 +27,9 @@ const UpdateUser = () => {
         setEmailError(false);
         setPhoneNumberError(false);
 
-        const url = 'http://localhost:5000/users/' + id;
+        const url = 'http://localhost:5000/users/';
         fetch(url, {
-            method: 'PUT',
+            method: 'POST',
             headers: { "Content-type": "application/json" },
             body: JSON.stringify({
                 firstName: name,
@@ -82,17 +64,17 @@ const UpdateUser = () => {
     }
 
     return (  
-        <div className="update">
-            <Button className="back" variant="contained" onClick={goBack} style={{ marginTop: '10px', marginLeft: '20px' }} startIcon={ <KeyboardBackspaceIcon/> }> Back </Button>
-            <div className="updateUser" style={{height: "100%"}}>
+        <div className="add">
+            <Button className="back" variant="contained" onClick={goBack} style={{ marginTop: '10px', marginLeft: '20px' }} startIcon={ <KeyboardBackspaceIcon/> }> Back </Button>            
+            <div className="addUser" style={{height: "100%"}}>
                 <Avatar className="avatar" sx={{ bgcolor: pink[500] }}>
-                    < ModeEditOutlineOutlinedIcon/>
+                    < AddCircleOutlineIcon />
                 </Avatar>
                 <Typography variant="h5" gutterBottom component="div" mb={ 3 } textAlign={"center"} sx={{ cursor: "default" }}>
-                    Update user data
+                    Add new user
                 </Typography>
-                <div className="formForUpdate">
-                    <form onSubmit={updateUser}>
+                <div className="formForaddUser">
+                    <form onSubmit={addUser}>
                         <InputLabel className="label">
                             Enter the first name
                         </InputLabel>
@@ -115,7 +97,7 @@ const UpdateUser = () => {
                         onChange={(e) => checkAndSetPhoneNumber(e.target.value)} inputProps={{ minLength: 10, maxLength: 12 }} error={phoneNumberError}/>
                         <br/>
                         <Box textAlign='center'>
-                        <Button type="submit" variant="contained" color="success" className="submit">SAVE</Button>
+                        <Button type="submit" variant="contained" color="success" className="submit">ADD USER</Button>
                         </Box>
                     </form>
                 </div>
@@ -124,4 +106,4 @@ const UpdateUser = () => {
     );
 }
  
-export default UpdateUser;
+export default AddUser;

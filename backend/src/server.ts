@@ -1,9 +1,7 @@
-// src/server.ts
 import express from 'express';
 import mongoose, { ConnectOptions } from 'mongoose';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import userSchema from './models/userSchema';
 
 const app = express();
 const PORT = process.env.PORT || 5000;

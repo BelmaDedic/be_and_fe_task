@@ -7,7 +7,12 @@ const router = express();
 router.get("/", async (req, res) => {
     const {email, phoneNumber} = req.query;
     let users = null;
-
+    if(email === "default") {
+        email === undefined;
+    }
+    if(phoneNumber === "default") {
+        phoneNumber === undefined;
+    }
     if(email === undefined && phoneNumber === undefined) {
         users = await userSchema.find();
         res.json(users);

@@ -1,6 +1,45 @@
+div {
+  cursor: default;
+}
+
+.users, .usersDetailsPage {
+  background-color: rgb(247, 240, 240);
+  height: 100vh;
+}
+
+.add, .update {
+  background-color: rgb(247, 240, 240);
+}
+
+.home {
+  display: flex;
+  justify-content: space-between;
+}
+
+.leftComponentAddUser {
+  margin-left: 1.5%;
+  margin-top: 1.5%;
+}
+
+.right-componentsSearch {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 1.5%;
+  margin-top: 1.5%;
+}
+
+.searchByEmail {
+  width: 180px;
+  padding-left: 10px;
+}
+
+.searchByPhoneNumber {
+  padding-left: 10px;
+  width: 180px;
+}
+
 .title {
   text-align: center;
-  margin-top: 1%;
   margin-bottom: 2%;
   font-family: 'EB Garamond';
   font-size: 35px;
@@ -30,8 +69,21 @@
   margin-bottom: -7%;
 }
 
-.delete:hover, .update:hover{
+.deleteButton:hover, .updateButton:hover{
   box-shadow: 2px 5px 12px grey;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center; /* Horizontal centering */
+  align-items: center; /* Vertical centering */
+  padding-top: 4%;
+  padding-bottom: 4%;
+}
+
+.page {
+  padding-left: 1%;
+  padding-right: 1%;
 }
 
 .usersDetails {
@@ -47,27 +99,38 @@
   width: 40%;
 }
 
-.updateUser {
+.updateUser, .addUser {
   height: 100vh;
 }
 
-.updateUser .avatar {
+.updateUser .avatar, .addUser .avatar {
   margin: auto;
-  margin-top: 1%;
+  margin-top: -0.3%;
 }
 
-.updateUser form {
+.updateUser form, .addUser form {
   width: 35%;
   margin: auto;
 }
 
-.updateUser form .label {
+.updateUser form .label, .addUser form .label {
   text-align: left;
   margin-bottom: 1%;
   margin-top: 3%;
 }
 
-.updateUser form .submit {
+.updateUser form .submit, .addUser form .submit {
   margin-top: 5%;
   margin-bottom: 4%; 
+}
+
+.notFound {
+  font-size: 185px;
+  text-align: center;
+}
+
+.notFound h2 {
+  font-size: 30px;
+  font-weight: 400;
+  color: red;
 }

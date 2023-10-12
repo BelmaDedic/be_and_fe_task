@@ -1,4 +1,3 @@
-// DeleteUserDialog.tsx
 import React, { useEffect, useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -16,27 +15,26 @@ interface DeleteUserDialogProps {
 
 const DeleteUserDialog: React.FC<DeleteUserDialogProps> = ({ open, onClose, userId }) => {
 
-    const[users, setUsers] = useState<UserObject>();
+  const[users, setUsers] = useState<UserObject>();
 
-    useEffect(() => {
-        fetchUsers();
-    }, []);
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
-    const fetchUsers = async () => {
-        const fetchedUser = await fetch("http://localhost:5000/users");
-        const user = await fetchedUser.json();
-        setUsers(user);
-    };
+  const fetchUsers = async () => {
+    const fetchedUser = await fetch("http://localhost:5000/users");
+    const user = await fetchedUser.json();
+    setUsers(user);
+  };
     
-    const handleDelete = (userId: string) => {
-        fetch("http://localhost:5000/users/" + userId, {
-            method: "DELETE",
-            }).then(() => {
-                onClose();
-                fetchUsers();
-            });
-        
-    };
+  const handleDelete = (userId: string) => {
+    fetch("http://localhost:5000/users/" + userId, {
+      method: "DELETE",
+    }).then(() => {
+      onClose();
+      fetchUsers();
+    });
+  };
 
   return (
     <Dialog open={open} onClose={onClose}>
