@@ -6,6 +6,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { UserObject } from './UserObject';
+import {deleteUser, getAllUsers} from './services/UserService';
 
 interface DeleteUserDialogProps {
   open: boolean;
@@ -16,19 +17,15 @@ interface DeleteUserDialogProps {
 
 const DeleteUserDialog: React.FC<DeleteUserDialogProps> = ({ open, onClose, userId, handleSetUsers }) => {
 
-  const fetchUsers = async () => {
-    const fetchedUser = await fetch("http://localhost:5000/users");
-    const user = await fetchedUser.json();
+  const fetchUsers = async (): Promise<void> => {
+    const user: UserObject[] = await getAllUsers();
     handleSetUsers(user);
   };
     
-  const handleDelete = (userId: string) => {
-    fetch("http://localhost:5000/users/" + userId, {
-      method: "DELETE",
-    }).then(() => {
-      onClose();
-      fetchUsers();
-    });
+  const handleDelete = async (userId: string): Promise<void> => {
+    await deleteUser(userId);
+    onClose();
+    fetchUsers();
   };
 
   return (

@@ -1,67 +1,64 @@
-import { Avatar, Box, Button, InputLabel,TextField, Typography } from "@mui/material";
+import { Avatar, Box, Button, FormControl, InputLabel,MenuItem,Select,TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from 'react-router-dom'
+import { NavigateFunction, useNavigate } from 'react-router-dom'
 import { pink } from "@mui/material/colors";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { phoneNumberTypeEnum } from "./PhoneNumberTypeEnum";
+import { saveUser } from "./services/UserService";
 
 const AddUser = () => {  
-    const[name, setName] = useState('');
-    const[lastName, setLastName] = useState('');
-    const[email, setEmail] = useState('');
-    const[phoneNumberValue, setPhoneNumberValue] = useState('');
-    const[nameError, setNameError] = useState(false);
-    const[lastNameError, setLastNameError] = useState(false);
-    const[emailError, setEmailError] = useState(false);
-    const[phoneNumberError, setPhoneNumberError] = useState(false);
-    const navigate = useNavigate();
+    const[name, setName] = useState<string>('');
+    const[lastName, setLastName] = useState<string>('');
+    const[email, setEmail] = useState<string>('');
+    const[phoneNumberType, setPhoneNumberType] = useState<string>(phoneNumberTypeEnum.PRIMARY.toString());
+    const[phoneNumberValue, setPhoneNumberValue] = useState<string>('');
+    const[nameError, setNameError] = useState<boolean>(false);
+    const[lastNameError, setLastNameError] = useState<boolean>(false);
+    const[emailError, setEmailError] = useState<boolean>(false);
+    const[phoneNumberTypeError, setPhoneNumberTypeError] = useState<boolean>(false);
+    const[phoneNumberError, setPhoneNumberError] = useState<boolean>(false);
 
-    const restriction = /^[0-9]?\d*(?:[-]\d*)?(?:[0-9]\d*)?(?:[-]\d*)?(?:[0-9]\d*)?$/;
+    const navigate: NavigateFunction = useNavigate();
 
-    const addUser = (e: React.FormEvent<HTMLFormElement>) => {
+    const restriction: RegExp = /^[0-9\-\/]*$/;
+
+    const addUser = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
 
         setNameError(false);
         setLastNameError(false);
         setEmailError(false);
         setPhoneNumberError(false);
+        setPhoneNumberTypeError(false); 
 
-        const url = 'http://localhost:5000/users/';
-        fetch(url, {
-            method: 'POST',
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify({
-                firstName: name,
-                lastName: lastName,
-                email: email,
-                value: phoneNumberValue 
-            })
-        })
-        .then(() => {
-            if(name === "") {
-                setNameError(true);
-            } else if(lastName === "") {
-                setLastNameError(true);
-            } else if(email === "") {
-                setEmailError(true);
-            } else if(phoneNumberValue === "") {
-                setPhoneNumberError(true);
-            } else {
-                navigate('/')
-            }
-        })
+        saveUser(name, lastName, email, phoneNumberType, phoneNumberValue);
+
+        if(name === "") {
+            setNameError(true);
+        } else if(lastName === "") {
+            setLastNameError(true);
+        } else if(email === "") {
+            setEmailError(true);
+        } else if(phoneNumberType === "") {
+            setPhoneNumberTypeError(true);
+        } else if(phoneNumberValue === "") {
+            setPhoneNumberError(true);
+        } else {
+            navigate('/')
+        }
     }
 
     const primaryPhoneNumberFormatting = (input: string): string => {
-        // Remove any non-numeric characters from the input
-      const phoneNumber = input.replace(/\D/g, '');
+      // Remove any non-numeric characters from the input
+      const phoneNumber: string = input.replace(/\D/g, '');
       
       // Check if the input is empty or exceeds 10 digits
       if (phoneNumber.length === 0) {
         input = '';
       } else if (phoneNumber.length <= 10) {
         // Format the phone number as XXX-XXX-XXXX
-        let formattedNumber = phoneNumber.slice(0, 3);
+        let formattedNumber: string = phoneNumber.slice(0, 3);
         if (phoneNumber.length > 3) {
           formattedNumber += '-' + phoneNumber.slice(3, 6);
         }
@@ -73,18 +70,63 @@ const AddUser = () => {
         // If the input exceeds 10 digits, truncate it
         input = phoneNumber.slice(0, 10);
       }
-
       return input;
     }
 
-    const checkAndSetPhoneNumber = (e: string) => {
+    const secondaryPhoneNumberFormatting = (input: string): string => {
+        // Remove any non-numeric characters from the input
+      const phoneNumber: string = input.replace(/\D/g, '');
+      
+      // Check if the input is empty or exceeds 9 digits
+      if (phoneNumber.length === 0) {
+        input = '';
+      } else if (phoneNumber.length <= 9) {
+        // Format the phone number as XXX-XXX-XXXX
+        let formattedNumber: string = phoneNumber.slice(0, 3);
+        if (phoneNumber.length > 3) {
+          formattedNumber += '/' + phoneNumber.slice(3, 6);
+        }
+        if (phoneNumber.length > 6) {
+          formattedNumber += '-' + phoneNumber.slice(6, 9);
+        }
+        input = formattedNumber;
+      } else {
+        // If the input exceeds 9 digits, truncate it
+        input = phoneNumber.slice(0, 9);
+      }
+      return input;
+      }
+
+    const checkAndSetPhoneNumber = (e: string): void => {
         if (restriction.test(e)) {
-            setPhoneNumberValue(primaryPhoneNumberFormatting(e));
+            if(phoneNumberType === phoneNumberTypeEnum.PRIMARY) {
+                setPhoneNumberValue(primaryPhoneNumberFormatting(e));
+            } else {
+                setPhoneNumberValue(secondaryPhoneNumberFormatting(e));
+            }   
         }
     }
 
-    const goBack = () => {
+    const goBack = (): void => {
         navigate('/');
+    }
+
+    const renderHelperText = (phoneNumberType: string): string => {
+        return phoneNumberType === phoneNumberTypeEnum.PRIMARY ? "Format: 012-345-6789" : "Format: 012/345-678"
+    }
+
+    const lengthOfPhoneNumber = (phoneNumberType: string): number => {
+        if(phoneNumberType === phoneNumberTypeEnum.PRIMARY.toString()) {
+            return 12;
+        } else {
+            return 11;
+        }
+    } 
+
+    const checkAndSetPhoneNumberType = (phoneNumberType: string): void => {
+        setPhoneNumberType(phoneNumberType);
+        setPhoneNumberValue('');
+        checkAndSetPhoneNumber(phoneNumberType);
     }
 
     return (  
@@ -115,14 +157,35 @@ const AddUser = () => {
                         <TextField fullWidth required id="outlined-required" type="email" color="success" label="Email" autoComplete="off" value={email} onChange={(e) => setEmail(e.target.value)} error={emailError}/>
                         <br/>
                         <InputLabel className="label">
+                            Select a phone number type
+                        </InputLabel>
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label" required>Phone number type</InputLabel>
+                            <Select required
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={phoneNumberType}
+                                label="Phone number type"
+                                error={phoneNumberTypeError}
+                                onChange={(event) => checkAndSetPhoneNumberType(event.target.value)}
+                            >
+                                <MenuItem value={'primary'} selected>{phoneNumberTypeEnum.PRIMARY}</MenuItem>
+                                <MenuItem value={'secondary'}>{phoneNumberTypeEnum.SECONDARY}</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <br/>
+                        { phoneNumberType && <>
+                        <InputLabel className="label">
                             Enter the phone number
                         </InputLabel>
-                        <TextField fullWidth required id="outlined-required" label="Phone number" autoComplete="off" helperText="Format: 012-345-6789" value={phoneNumberValue} 
-                        onChange={(e) => checkAndSetPhoneNumber(e.target.value)} inputProps={{ minLength: 10, maxLength: 12 }} error={phoneNumberError}/>
+                        <TextField fullWidth required id="outlined-required" label="Phone number" autoComplete="off" helperText={renderHelperText(phoneNumberType)}  value={phoneNumberValue} 
+                        onChange={(e) => checkAndSetPhoneNumber(e.target.value)} inputProps={{ minLength: lengthOfPhoneNumber(phoneNumberType), maxLength: lengthOfPhoneNumber(phoneNumberType) }} error={phoneNumberError}/>
                         <br/>
                         <Box textAlign='center'>
                         <Button type="submit" variant="contained" color="success" className="submit">ADD USER</Button>
                         </Box>
+                        </>
+                        }
                     </form>
                 </div>
             </div>

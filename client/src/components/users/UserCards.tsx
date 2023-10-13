@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { Dispatch, SetStateAction, useState } from 'react';
 import DeleteUserDialog from './DeleteUserDialog';
 
@@ -20,19 +20,19 @@ const UserCards = ( {user, handleUserDetails, handleSetUsers} : CardProps ) => {
     const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
     const [userId, setUserId] = useState<string>(''); // Store the user ID to be deleted
 
-    const navigate = useNavigate();
+    const navigate: NavigateFunction = useNavigate();
     const phoneNumber: IPhoneNumber = Object.values(user.phoneNumber).pop();
 
-    const getDetails = (user: UserObject) => {
+    const getDetails = (user: UserObject): void => {
         handleUserDetails(user);
         navigate(`/UserDetails/${user._id}`);
     }
 
-    const updateUser = (id: string) => {
+    const updateUser = (id: string): void => {
         navigate(`/updateUser/${id}`);
     };
 
-    const handleDeleteUser = (userId: string) => {
+    const handleDeleteUser = (userId: string): void => {
         setUserId(userId);
         setDialogOpen(true);
     };

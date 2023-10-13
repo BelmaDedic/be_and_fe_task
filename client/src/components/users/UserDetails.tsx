@@ -3,8 +3,9 @@ import userImage from '../../images/user.png'
 import Typography from "@mui/material/Typography";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import Button from "@mui/material/Button";
-import { useNavigate, useParams } from "react-router-dom";
+import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { getUserForDetails } from "./services/UserService";
 
 interface DetailsProps {
     userDetails: UserObject | undefined;
@@ -14,9 +15,9 @@ const UserDetails = ({userDetails}: DetailsProps) => {
     const[user, setUser] = useState<UserObject | undefined>(userDetails);
 
     const { id } = useParams<{ id: string }>();
-    const navigate = useNavigate();
+    const navigate: NavigateFunction = useNavigate();
 
-    useEffect(() => {
+    useEffect((): void => {
         if(userDetails === undefined) {
             fetchUser();
         }
@@ -24,14 +25,13 @@ const UserDetails = ({userDetails}: DetailsProps) => {
 
     const phoneNumber: IPhoneNumber = user && Object.values(user.phoneNumber).pop();
 
-    const goBack = () => {
+    const goBack = (): void => {
         navigate('/');
     }
 
     // If userDetails not exist, then fetch by id and store it in userDetails
-    const fetchUser = async () => {
-        const fetchedUser = await fetch("http://localhost:5000/users/" + id);
-        const user: UserObject = await fetchedUser.json();
+    const fetchUser = async (): Promise<void> => {
+        const user: UserObject = await getUserForDetails(id);
         setUser(user);
     }
 

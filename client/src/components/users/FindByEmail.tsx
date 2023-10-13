@@ -7,9 +7,9 @@ interface FindByEmailProps {
 }
 
 const FindByEmail = ({ passSetEmail }: FindByEmailProps) => {
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState<string>("");
 
-  const handleChange = (event: { target: { value: string; }; }) => {
+  const handleChange = (event: { target: { value: string; }; }): void => {
       setEmail(event.target.value);
       if(event.target.value.length > 0){
         passSetEmail(event.target.value);

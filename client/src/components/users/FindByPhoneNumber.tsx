@@ -9,9 +9,9 @@ interface FindByPhoneNumberProps {
 }
 
 const FindByPhoneNumber = ({ passSetPhoneNumber }: FindByPhoneNumberProps) => {
-    const [phoneNumber, setPhoneNumber] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState<string>("");
 
-    const handleChange = (event: { target: { value: string; }; }) => {
+    const handleChange = (event: { target: { value: string; }; }): void => {
         if (validInput.test(event.target.value)) {
             setPhoneNumber(event.target.value);
             if(event.target.value.length > 0){

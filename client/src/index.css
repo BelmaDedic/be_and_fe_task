@@ -47,6 +47,13 @@ div {
   cursor: default;
 }
 
+.noUsers {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 400;
+  padding-top: 10%;
+}
+
 .cards {
   width: 100%;
   display: flex;
@@ -113,7 +120,7 @@ div {
   margin: auto;
 }
 
-.updateUser form .label, .addUser form .label {
+.updateUser form .label, .addUser form .label, .formControl {
   text-align: left;
   margin-bottom: 1%;
   margin-top: 3%;

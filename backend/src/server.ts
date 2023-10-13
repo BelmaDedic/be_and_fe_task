@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT: string | 5000 = process.env.PORT || 5000;
 
 const userRoutes = require('./routes/userRoutes');
 
@@ -12,19 +12,19 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // MongoDB connection
-const mongoDBlink = process.env.mongoDBlink || "";
+const mongoDBlink: string = process.env.mongoDBlink || "";
 mongoose.connect(mongoDBlink, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 } as ConnectOptions);
 
-const connection = mongoose.connection;
-connection.once('open', () => {
+const connection: mongoose.Connection = mongoose.connection;
+connection.once('open', (): void => {
   console.log('MongoDB database connection established successfully');
 });
 
 app.use("/users", userRoutes);
 
-app.listen(PORT, () => {
+app.listen(PORT, (): void => {
   console.log(`Server is running on port ${PORT}`);
 });

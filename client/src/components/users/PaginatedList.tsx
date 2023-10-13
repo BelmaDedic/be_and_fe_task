@@ -11,7 +11,7 @@ interface PaginatedListProps {
 const PaginatedList = ({ users, handleUserDetails, setUsers }: PaginatedListProps) => {
   return (
     <div className='cards'>
-        {users.map((user, index) => (
+        {users.map((user: UserObject, index: number) => (
             <UserCards key={index} user = { user } handleUserDetails={handleUserDetails}  handleSetUsers={setUsers}/>
         )) }
     </div>

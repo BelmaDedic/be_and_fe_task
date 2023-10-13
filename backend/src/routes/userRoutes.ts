@@ -1,24 +1,25 @@
 import express  from "express";
 import userSchema from "../models/userSchema";
 import mongoose from "mongoose";
+import { IUser } from "../models/interfaceUser";
 
 const router = express();
 
-function escapeRegex(text: string) {
+function escapeRegex(text: string): string {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 };
 
 router.get("/", async (req, res) => {
     const {email, phoneNumber} = req.query;
-    let users = null;
+    let users: IUser[] = [];
     if(email === "default") {
         email === undefined;
     }
     if(phoneNumber === "default") {
         phoneNumber === undefined;
     }
-    const regexEmail = req.query.email && new RegExp(escapeRegex(req.query.email as string), 'gi');
-    const regexPhoneNumber =req.query.phoneNumber && new RegExp(escapeRegex(req.query.phoneNumber as string), 'gi');
+    const regexEmail: string | RegExp | undefined = req.query.email && new RegExp(escapeRegex(req.query.email as string), 'gi');
+    const regexPhoneNumber: string | RegExp | undefined = req.query.phoneNumber && new RegExp(escapeRegex(req.query.phoneNumber as string), 'gi');
 
     if((email === undefined || email === "default") && (phoneNumber === undefined || phoneNumber === "default")) {
         users = await userSchema.find();
@@ -36,19 +37,19 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-    const _id = req.params.id;
-    const user = await userSchema.findById(_id);
+    const _id: string = req.params.id;
+    const user: (mongoose.Document<unknown, {}, IUser> & IUser & Required<{ _id: string; }>) | null = await userSchema.findById(_id);
     res.json(user);
 });
 
 router.post("/", async (req, res) => {
-    const user = new userSchema({
+    const user: mongoose.Document<unknown, {}, IUser> & IUser & Required<{ _id: string; }> = new userSchema({
         _id: new mongoose.Types.ObjectId(),
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
         phoneNumber: [ 
-            { numberType: "primary", 
+            { numberType: req.body.phoneNumberType, 
             value:  req.body.value} 
         ]
     });
@@ -57,7 +58,7 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
-    const updateUser = await userSchema.findByIdAndUpdate(
+    const updateUser: (mongoose.Document<unknown, {}, IUser> & IUser & Required<{ _id: string; }>) | null = await userSchema.findByIdAndUpdate(
         {_id: req.params.id}, 
         {
             $set: {
@@ -65,25 +66,24 @@ router.put("/:id", async (req, res) => {
                 lastName: req.body.lastName,
                 email: req.body.email,
                 phoneNumber: req.body.value &&  [
-                    { numberType: "primary", 
+                    { numberType: req.body.phoneNumberType, 
                     value: req.body.value }
                 ]
             },
         }
     );
     updateUser?.save().then(async () => {
-        const _id = req.params.id;
-        const updatedUser = await userSchema.findById(_id);
+        const _id: string = req.params.id;
+        const updatedUser: (mongoose.Document<unknown, {}, IUser> & IUser & Required<{ _id: string; }>) | null = await userSchema.findById(_id);
         res.json(updatedUser);
     });
 });
     
 router.delete("/:id", async (req, res) => {
-    const _id = req.params.id;
+    const _id: string = req.params.id;
     try {
-        const user = await userSchema.findByIdAndDelete(_id);
+        const user: (mongoose.Document<unknown, {}, IUser> & IUser & Required<{ _id: string; }>) | null = await userSchema.findByIdAndDelete(_id);
         res.json({ success: true, user });
-
     } catch (error) {
         res.status(500).json({ success: false, error: 'An error occurred' });
     }
