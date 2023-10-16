@@ -1,6 +1,8 @@
 import { IUserPhoneNumberData } from '../models/interfaces/interfacePhoneNumberData';
 import { IuserEmailsData } from '../models/interfaces/interfaceUserEmailData';
 
+// File with arrays given in PDF
+
 export const userPhoneNumberData: IUserPhoneNumberData[] = [
   {
     email: 'marina@kahvana.com',

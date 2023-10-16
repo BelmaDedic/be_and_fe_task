@@ -10,6 +10,7 @@ import { IUserPhoneNumberData } from '../models/interfaces/interfacePhoneNumberD
 
 const unknown: string = 'Unknown';
 
+// Function for check is it enterd email unique or already used (is in database user with same email)
 const isEmailUnique = async (email: string): Promise<boolean> => {
   let user: IUser | null;
 
@@ -17,6 +18,7 @@ const isEmailUnique = async (email: string): Promise<boolean> => {
   return user == null ? true : false;
 };
 
+// Merging array userPhoneNumberData with elements from userEmailsData array
 export const mergeEmailsIntoPhoneNumbers = async (): Promise<void> => {
   userPhoneNumberData.map(async (phoneNumber: IUserPhoneNumberData) => {
     const emailObject: IuserEmailsData | undefined = userEmailsData.find(
@@ -63,6 +65,7 @@ export const mergeEmailsIntoPhoneNumbers = async (): Promise<void> => {
   });
 };
 
+// Merging array userEmailsData with elements from userPhoneNumberData array
 export const mergePhoneNumbersIntoEmails = async (): Promise<void> => {
   userEmailsData.map(async (email: IuserEmailsData) => {
     const phoneNumberObject: IUserPhoneNumberData | undefined =

@@ -5,10 +5,12 @@ import { IUser } from '../models/interfaces/interfaceUser';
 
 const router = express();
 
+// Pattern for email and phone number
 function escapeRegex(text: string): string {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
 
+// Fetch all users, also this is used for search by email or/and phone number
 router.get('/', async (req, res) => {
   const { email, phoneNumber } = req.query;
 
@@ -56,6 +58,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Endpoint for get user by certain id
 router.get('/:id', async (req, res) => {
   const _id: string = req.params.id;
   const user:
@@ -66,6 +69,7 @@ router.get('/:id', async (req, res) => {
   res.json(user);
 });
 
+// Adding the entered user in database
 router.post('/', async (req, res) => {
   const user: mongoose.Document<unknown, {}, IUser> &
     IUser &
@@ -82,6 +86,7 @@ router.post('/', async (req, res) => {
   res.json(user);
 });
 
+// Update data for certain user based on his id
 router.put('/:id', async (req, res) => {
   const updateUser:
     | (mongoose.Document<unknown, {}, IUser> &
@@ -111,6 +116,7 @@ router.put('/:id', async (req, res) => {
   });
 });
 
+// Deleting certain user based on his id
 router.delete('/:id', async (req, res) => {
   const _id: string = req.params.id;
   try {
@@ -125,6 +131,7 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// Endpoint for check if user already exists with entered email
 router.get('/email/:email', async (req, res) => {
   const email: string = req.params.email;
   const user: IUser | null = await userSchema.findOne({ email: email });

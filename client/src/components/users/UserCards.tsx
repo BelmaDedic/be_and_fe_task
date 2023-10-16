@@ -15,9 +15,10 @@ interface CardProps {
   handleSetUsers: Dispatch<SetStateAction<UserObject[]>>;
 }
 
+// Card for showing all user's data
 const UserCards = ({ user, handleUserDetails, handleSetUsers }: CardProps) => {
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [userId, setUserId] = useState<string>(''); // Store the user ID to be deleted
+  const [userId, setUserId] = useState<string>('');
 
   const navigate: NavigateFunction = useNavigate();
   const phoneNumber: IPhoneNumber = Object.values(user.phoneNumber).pop();

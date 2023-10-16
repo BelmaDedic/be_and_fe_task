@@ -13,6 +13,7 @@ interface UserProps {
   handleUserDetails: (user: UserObject) => void;
 }
 
+// Home page and rendering all users
 const Users = ({ handleUserDetails }: UserProps) => {
   const [users, setUsers] = useState<UserObject[]>([]);
   const [email, setEmail] = useState<string>('default');

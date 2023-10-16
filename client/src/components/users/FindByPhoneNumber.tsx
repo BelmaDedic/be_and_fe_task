@@ -8,6 +8,7 @@ interface FindByPhoneNumberProps {
   passSetPhoneNumber: Dispatch<SetStateAction<string>>;
 }
 
+// Input for search by user's phone number
 const FindByPhoneNumber = ({ passSetPhoneNumber }: FindByPhoneNumberProps) => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
 

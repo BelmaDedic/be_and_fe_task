@@ -2,6 +2,7 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 
+// Render this page if user entered no valid URL
 const NotFound = () => {
   const navigate = useNavigate();
 

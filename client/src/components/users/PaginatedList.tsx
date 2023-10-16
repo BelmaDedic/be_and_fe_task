@@ -8,6 +8,7 @@ interface PaginatedListProps {
   setUsers: Dispatch<SetStateAction<UserObject[]>>;
 }
 
+// Component for rendering pagination (specific number of items on page)
 const PaginatedList = ({
   users,
   handleUserDetails,

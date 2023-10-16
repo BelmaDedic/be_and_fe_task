@@ -6,6 +6,7 @@ interface FindByEmailProps {
   passSetEmail: Dispatch<SetStateAction<string>>;
 }
 
+// Input for search by user's email
 const FindByEmail = ({ passSetEmail }: FindByEmailProps) => {
   const [email, setEmail] = useState<string>('');
 

@@ -45,6 +45,7 @@ const UpdateUser = () => {
   const { id } = useParams();
   const navigate: NavigateFunction = useNavigate();
 
+  // Restriction for enter phone number (digits, "-" and "/")
   const restriction: RegExp = /^[0-9\-\/]*$/;
 
   useEffect((): void => {
@@ -52,8 +53,8 @@ const UpdateUser = () => {
   }, []);
 
   useEffect(() => {
-    handleButtonDisabled()
-  }, [emailError, phoneNumberError, nameError, lastNameError, ifEmailExists])
+    handleButtonDisabled();
+  }, [emailError, phoneNumberError, nameError, lastNameError, ifEmailExists]);
 
   const fetchUser = async (): Promise<void> => {
     const user: UserObject = await getUserDetailsForUpdate(id);
@@ -70,7 +71,7 @@ const UpdateUser = () => {
     const ifExists: boolean = await chechIfEmailExists(email);
     setEmail(email);
 
-    if(ifExists && user?.email === email) {
+    if (ifExists && user?.email === email) {
       setEmailExists(false);
       setEmailError(false);
     } else {
@@ -96,7 +97,7 @@ const UpdateUser = () => {
       phoneNumberType,
       phoneNumberValue
     );
-    
+
     if (name === '') {
       setNameError(true);
     } else if (lastName === '') {
@@ -195,9 +196,14 @@ const UpdateUser = () => {
   };
 
   const handleButtonDisabled = (): void => {
-    const isDisabled: boolean = emailError || phoneNumberError || nameError || lastNameError || ifEmailExists;
+    const isDisabled: boolean =
+      emailError ||
+      phoneNumberError ||
+      nameError ||
+      lastNameError ||
+      ifEmailExists;
     setButtonDisabled(isDisabled);
-  }
+  };
 
   return (
     <div className="update">

@@ -11,10 +11,11 @@ import { deleteUser, getAllUsers } from './services/UserService';
 interface DeleteUserDialogProps {
   open: boolean;
   onClose: () => void;
-  userId: string; // Forwarded user ID
+  userId: string;
   handleSetUsers: Dispatch<SetStateAction<UserObject[]>>;
 }
 
+// Dialog for delete user
 const DeleteUserDialog: React.FC<DeleteUserDialogProps> = ({
   open,
   onClose,

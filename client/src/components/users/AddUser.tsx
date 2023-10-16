@@ -19,6 +19,7 @@ import { phoneNumberTypeEnum } from './dataTypes/PhoneNumberTypeEnum';
 import { chechIfEmailExists, saveUser } from './services/UserService';
 import { InfoOutlined } from '@mui/icons-material';
 
+// Component for adding user through form
 const AddUser = () => {
   const [name, setName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -36,11 +37,12 @@ const AddUser = () => {
 
   const navigate: NavigateFunction = useNavigate();
 
+  // Restriction for enter phone number (digits, "-" and "/")
   const restriction: RegExp = /^[0-9\-\/]*$/;
 
-    useEffect(() => {
-      handleButtonDisabled()
-    }, [emailError, phoneNumberError, nameError, lastNameError, ifEmailExists])
+  useEffect(() => {
+    handleButtonDisabled();
+  }, [emailError, phoneNumberError, nameError, lastNameError, ifEmailExists]);
 
   const handleEmail = async (email: string): Promise<void> => {
     const ifExists: boolean = await chechIfEmailExists(email);
@@ -57,7 +59,7 @@ const AddUser = () => {
     setLastNameError(false);
     setEmailError(false);
     setPhoneNumberError(false);
-  
+
     saveUser(name, lastName, email, phoneNumberType, phoneNumberValue);
 
     if (name === '') {
@@ -156,9 +158,14 @@ const AddUser = () => {
   };
 
   const handleButtonDisabled = (): void => {
-    const isDisabled: boolean = emailError || phoneNumberError || nameError || lastNameError || ifEmailExists;
+    const isDisabled: boolean =
+      emailError ||
+      phoneNumberError ||
+      nameError ||
+      lastNameError ||
+      ifEmailExists;
     setButtonDisabled(isDisabled);
-  }
+  };
 
   return (
     <div className="add">

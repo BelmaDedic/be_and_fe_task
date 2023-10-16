@@ -11,10 +11,13 @@ interface DetailsProps {
   userDetails: UserObject | undefined;
 }
 
+// Component for showing page of one user and all his data
 const UserDetails = ({ userDetails }: DetailsProps) => {
   const [user, setUser] = useState<UserObject | undefined>(userDetails);
 
+  // Id from URL
   const { id } = useParams<{ id: string }>();
+
   const navigate: NavigateFunction = useNavigate();
 
   useEffect((): void => {
@@ -31,6 +34,7 @@ const UserDetails = ({ userDetails }: DetailsProps) => {
   };
 
   // If userDetails not exist, then fetch by id and store it in userDetails
+  // This is implemented for search by id
   const fetchUser = async (): Promise<void> => {
     const user: UserObject = await getUserForDetails(id);
     setUser(user);

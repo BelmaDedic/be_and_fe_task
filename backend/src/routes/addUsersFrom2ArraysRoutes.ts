@@ -6,6 +6,7 @@ import {
 
 const router = express();
 
+// Merging two given arrays and save it in database
 router.get('/', async (req, res) => {
   try {
     await mergeEmailsIntoPhoneNumbers();

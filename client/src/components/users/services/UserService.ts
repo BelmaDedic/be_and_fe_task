@@ -1,5 +1,7 @@
 import { UserObject } from '../dataTypes/UserObject';
 
+// Calling APIs from backend regarding user CRUD
+
 const url: string = 'http://localhost:5000/users';
 
 export const getAllUsers = async (): Promise<UserObject[]> => {
@@ -87,9 +89,7 @@ export const saveUser = (
 };
 
 export const chechIfEmailExists = async (email: string): Promise<boolean> => {
-  const emailExists: Response = await fetch(
-    url + '/email/' + email
-  );
+  const emailExists: Response = await fetch(url + '/email/' + email);
   const ifExist: boolean = await emailExists.json();
   return ifExist;
-}
+};
