@@ -10,13 +10,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { pink } from '@mui/material/colors';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { phoneNumberTypeEnum } from './dataTypes/PhoneNumberTypeEnum';
-import { saveUser } from './services/UserService';
+import { chechIfEmailExists, saveUser } from './services/UserService';
 import { InfoOutlined } from '@mui/icons-material';
 
 const AddUser = () => {
@@ -30,24 +30,24 @@ const AddUser = () => {
   const [nameError, setNameError] = useState<boolean>(false);
   const [lastNameError, setLastNameError] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<boolean>(false);
-  const [phoneNumberTypeError, setPhoneNumberTypeError] =
-    useState<boolean>(false);
   const [phoneNumberError, setPhoneNumberError] = useState<boolean>(false);
   const [ifEmailExists, setEmailExists] = useState<boolean>(false);
+  const [isButtonDisabled, setButtonDisabled] = useState<boolean>(false);
 
   const navigate: NavigateFunction = useNavigate();
 
   const restriction: RegExp = /^[0-9\-\/]*$/;
 
-  const handleEmail = async (email: string): Promise<void> => {
-    const emailExists = await fetch(
-      'http://localhost:5000/users/email/' + email
-    );
-    const ifExist = await emailExists.json();
+    useEffect(() => {
+      handleButtonDisabled()
+    }, [emailError, phoneNumberError, nameError, lastNameError, ifEmailExists])
 
-    setEmailExists(ifExist);
+  const handleEmail = async (email: string): Promise<void> => {
+    const ifExists: boolean = await chechIfEmailExists(email);
+
+    setEmailExists(ifExists);
     setEmail(email);
-    setEmailError(ifExist);
+    setEmailError(ifExists);
   };
 
   const addUser = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -57,8 +57,7 @@ const AddUser = () => {
     setLastNameError(false);
     setEmailError(false);
     setPhoneNumberError(false);
-    setPhoneNumberTypeError(false);
-
+  
     saveUser(name, lastName, email, phoneNumberType, phoneNumberValue);
 
     if (name === '') {
@@ -67,8 +66,6 @@ const AddUser = () => {
       setLastNameError(true);
     } else if (email === '') {
       setEmailError(true);
-    } else if (phoneNumberType === '') {
-      setPhoneNumberTypeError(true);
     } else if (phoneNumberValue === '') {
       setPhoneNumberError(true);
     } else {
@@ -158,6 +155,11 @@ const AddUser = () => {
     checkAndSetPhoneNumber(phoneNumberType);
   };
 
+  const handleButtonDisabled = (): void => {
+    const isDisabled: boolean = emailError || phoneNumberError || nameError || lastNameError || ifEmailExists;
+    setButtonDisabled(isDisabled);
+  }
+
   return (
     <div className="add">
       <Button
@@ -244,7 +246,6 @@ const AddUser = () => {
                 id="demo-simple-select"
                 value={phoneNumberType}
                 label="Phone number type"
-                error={phoneNumberTypeError}
                 onChange={(event) =>
                   checkAndSetPhoneNumberType(event.target.value)
                 }
@@ -285,6 +286,7 @@ const AddUser = () => {
                     variant="contained"
                     color="success"
                     className="submit"
+                    disabled={isButtonDisabled}
                   >
                     ADD USER
                   </Button>

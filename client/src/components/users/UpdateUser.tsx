@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
@@ -19,7 +20,9 @@ import { phoneNumberTypeEnum } from './dataTypes/PhoneNumberTypeEnum';
 import {
   getUserDetailsForUpdate,
   getDetailsForUpdateUser,
+  chechIfEmailExists,
 } from './services/UserService';
+import { InfoOutlined } from '@mui/icons-material';
 
 const UpdateUser = () => {
   const [user, setUser] = useState<UserObject>();
@@ -36,6 +39,8 @@ const UpdateUser = () => {
   const [phoneNumberTypeError, setPhoneNumberTypeError] =
     useState<boolean>(false);
   const [phoneNumberError, setPhoneNumberError] = useState<boolean>(false);
+  const [ifEmailExists, setEmailExists] = useState<boolean>(false);
+  const [isButtonDisabled, setButtonDisabled] = useState<boolean>(false);
 
   const { id } = useParams();
   const navigate: NavigateFunction = useNavigate();
@@ -46,6 +51,10 @@ const UpdateUser = () => {
     fetchUser();
   }, []);
 
+  useEffect(() => {
+    handleButtonDisabled()
+  }, [emailError, phoneNumberError, nameError, lastNameError, ifEmailExists])
+
   const fetchUser = async (): Promise<void> => {
     const user: UserObject = await getUserDetailsForUpdate(id);
     setUser(user);
@@ -55,6 +64,19 @@ const UpdateUser = () => {
     setEmail(user.email);
     setPhoneNumberType(phoneNumber.numberType);
     setPhoneNumberValue(phoneNumber.value);
+  };
+
+  const handleEmail = async (email: string): Promise<void> => {
+    const ifExists: boolean = await chechIfEmailExists(email);
+    setEmail(email);
+
+    if(ifExists && user?.email === email) {
+      setEmailExists(false);
+      setEmailError(false);
+    } else {
+      setEmailExists(ifExists);
+      setEmailError(ifExists);
+    }
   };
 
   const updateUser = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -74,6 +96,7 @@ const UpdateUser = () => {
       phoneNumberType,
       phoneNumberValue
     );
+    
     if (name === '') {
       setNameError(true);
     } else if (lastName === '') {
@@ -171,6 +194,11 @@ const UpdateUser = () => {
     checkAndSetPhoneNumber(phoneNumberType);
   };
 
+  const handleButtonDisabled = (): void => {
+    const isDisabled: boolean = emailError || phoneNumberError || nameError || lastNameError || ifEmailExists;
+    setButtonDisabled(isDisabled);
+  }
+
   return (
     <div className="update">
       <Button
@@ -235,10 +263,15 @@ const UpdateUser = () => {
               label="Email"
               autoComplete="off"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => handleEmail(e.target.value)}
               error={emailError}
             />
-            <br />
+            {ifEmailExists && (
+              <FormHelperText>
+                <InfoOutlined />
+                Opps! Email already exist.
+              </FormHelperText>
+            )}
             <InputLabel className="label">
               Select a phone number type
             </InputLabel>
@@ -293,6 +326,7 @@ const UpdateUser = () => {
                     variant="contained"
                     color="success"
                     className="submit"
+                    disabled={isButtonDisabled}
                   >
                     SAVE
                   </Button>

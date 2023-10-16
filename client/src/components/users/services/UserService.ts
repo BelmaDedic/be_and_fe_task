@@ -85,3 +85,11 @@ export const saveUser = (
     }),
   });
 };
+
+export const chechIfEmailExists = async (email: string): Promise<boolean> => {
+  const emailExists: Response = await fetch(
+    url + '/email/' + email
+  );
+  const ifExist: boolean = await emailExists.json();
+  return ifExist;
+}

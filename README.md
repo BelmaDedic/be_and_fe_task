@@ -23,4 +23,6 @@ After env variable is set you can start the project with command:
 This will automatically run client and backend (backend is on port 5000, client is on port 3000).
 Whole application is on port 3001.
 
+Data from two given arrays (userPhoneNumberData and userEmailsData) can be found in "prepareDataService.ts". Logic of merging them in one array can be found in file "combineArraysService.ts". For merge them you need to run "http://localhost:5000/add-users-from-given-arrays".
+
 Note: If you make some changes on code you can run "npx prettier --write ." in root of project to make pretty code.
