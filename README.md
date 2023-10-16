@@ -23,4 +23,4 @@ After env variable is set you can start the project with command:
 This will automatically run client and backend (backend is on port 5000, client is on port 3000).
 Whole application is on port 3001.
 
-Note: If you make some changes on client side you can run "npx prettier --write ." to make pretty code.
+Note: If you make some changes on code you can run "npx prettier --write ." in root of project to make pretty code.
