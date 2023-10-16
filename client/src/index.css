@@ -2,12 +2,14 @@ div {
   cursor: default;
 }
 
-.users, .usersDetailsPage {
+.users,
+.usersDetailsPage {
   background-color: rgb(247, 240, 240);
   height: 100vh;
 }
 
-.add, .update {
+.add,
+.update {
   background-color: rgb(247, 240, 240);
 }
 
@@ -76,8 +78,13 @@ div {
   margin-bottom: -7%;
 }
 
-.deleteButton:hover, .updateButton:hover{
+.deleteButton:hover,
+.updateButton:hover {
   box-shadow: 2px 5px 12px grey;
+}
+
+.homePagination {
+  background-color: rgb(247, 240, 240);
 }
 
 .pagination {
@@ -86,6 +93,8 @@ div {
   align-items: center; /* Vertical centering */
   padding-top: 4%;
   padding-bottom: 4%;
+  height: 100%;
+  background-color: rgb(247, 240, 240);
 }
 
 .page {
@@ -106,29 +115,35 @@ div {
   width: 40%;
 }
 
-.updateUser, .addUser {
+.updateUser,
+.addUser {
   height: 100vh;
 }
 
-.updateUser .avatar, .addUser .avatar {
+.updateUser .avatar,
+.addUser .avatar {
   margin: auto;
   margin-top: -0.3%;
 }
 
-.updateUser form, .addUser form {
+.updateUser form,
+.addUser form {
   width: 35%;
   margin: auto;
 }
 
-.updateUser form .label, .addUser form .label, .formControl {
+.updateUser form .label,
+.addUser form .label,
+.formControl {
   text-align: left;
   margin-bottom: 1%;
   margin-top: 3%;
 }
 
-.updateUser form .submit, .addUser form .submit {
+.updateUser form .submit,
+.addUser form .submit {
   margin-top: 5%;
-  margin-bottom: 4%; 
+  margin-bottom: 4%;
 }
 
 .notFound {
